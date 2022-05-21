@@ -28,6 +28,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@rodneylab/svelte-social-icons": "^0.0.21"
+    "@rodneylab/svelte-social-icons": "^0.0.21",
+    "firebase": "^9.8.1",
+    "rxfire": "^6.0.3"
   }
 }
