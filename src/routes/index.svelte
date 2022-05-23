@@ -71,6 +71,11 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Aurder</title>
+	<description>Food ordering website sytem</description>
+</svelte:head>
+
 <div class="flex flex-col w-full h-screen items-center justify-center bg-slate-700">
 	{#if !isUser}
 		<!-- sign in button -->

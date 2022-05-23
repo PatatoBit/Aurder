@@ -51,6 +51,11 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Aurder Admin</title>
+	<description>Food ordering website sytem</description>
+</svelte:head>
+
 <div class="flex flex-col w-full h-screen items-center justify-center bg-slate-700">
 	{#if !isUser}
 		<!-- Admin Sign in -->
@@ -111,13 +116,15 @@
 					<div class="mb-4">
 						<h1 class="text-center text-2xl font-bold text-slate-200">Welcome Admin</h1>
 						<p class="text-center text-slate-300 text-xs">{umail}</p>
-						<button
-							on:click={() => auth.signOut()}
-							class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-							type="submit"
-						>
-							Sign Out
-						</button>
+						<div class="flex flex-row justify-center">
+							<button
+								on:click={() => auth.signOut()}
+								class="flex text-center mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+								type="submit"
+							>
+								Sign Out
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
