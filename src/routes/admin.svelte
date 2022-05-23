@@ -1,7 +1,7 @@
 <script>
 	import { auth, db } from '../firebase';
 	import { signInWithEmailAndPassword } from 'firebase/auth';
-	import { collection, getDocs } from 'firebase/firestore';
+	import { collection, onSnapshot, doc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 
 	let nameInput;
@@ -13,12 +13,10 @@
 	let orders = [];
 
 	onMount(async () => {
-		const querySnapshot = await getDocs(orderRef);
-		querySnapshot.forEach((doc) => {
-			// doc.data() is never undefined for query doc snapshots
+		const unsub = onSnapshot(doc(db, 'cities', 'SF'), (doc) => {
 			orders = [...orders, { sender: doc.data().sender, name: doc.data().name }];
+			console.log(orders);
 		});
-		console.log(orders);
 	});
 
 	let umail;

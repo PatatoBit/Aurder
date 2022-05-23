@@ -1,7 +1,7 @@
 <script>
 	import { auth, db } from '../firebase';
 	import { onMount } from 'svelte';
-	import { doc, setDoc, getDoc } from 'firebase/firestore';
+	import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 	import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 	const provider = new GoogleAuthProvider();
 
@@ -61,17 +61,29 @@
 
 	onMount(() => {
 		setTimeout(async () => {
-			const docSnap = await getDoc(orderRef);
-
-			if (docSnap.exists()) {
-				urOrder = docSnap.data().name;
-				console.log('Document data:', docSnap.data());
-			} else {
-				// doc.data() will be undefined in this case
-				console.log('No such document!');
-			}
+			const unsubscribe = onSnapshot(orderRef, (querySnapshot) => {
+				const cities = [];
+				querySnapshot.forEach((doc) => {
+					if (doc.exists()) {
+						urOrder = doc.data().name;
+						console.log('Document data:', doc.data());
+					} else {
+						// doc.data() will be undefined in this case
+						console.log('No such document!');
+					}
+					console.log('Document data:', doc.data());
+				});
+				console.log('Current cities in CA: ', cities.join(', '));
+			});
 		}, 1000);
 	});
+	// if (doc.exists()) {
+	// 	urOrder = doc.data().name;
+	// 	console.log('Document data:', doc.data());
+	// } else {
+	// 	// doc.data() will be undefined in this case
+	// 	console.log('No such document!');
+	// }
 </script>
 
 <svelte:head>

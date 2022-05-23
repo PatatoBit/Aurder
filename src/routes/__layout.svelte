@@ -11,7 +11,7 @@
 	<Title />
 </div>
 
-<div class="absolute top-0 right-0 p-3 flex flex-row gap-2">
+<div class="absolute top-0 right-0 p-3 flex flex-col sm:flex-row gap-2">
 	<Buttons />
 </div>
 
