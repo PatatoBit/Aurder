@@ -56,34 +56,48 @@
 		inputData = '';
 	};
 
-	async function getOrder() {
-		const docSnap = await getDoc(orderRef);
+	onMount(() => {
+		setTimeout(async () => {
+			const docSnap = await getDoc(orderRef);
 
-		if (docSnap.exists()) {
-			urOrder = docSnap.data().name;
-			console.log('Document data:', docSnap.data());
-		} else {
-			// doc.data() will be undefined in this case
-			console.log('No such document!');
-		}
-	}
+			if (docSnap.exists()) {
+				urOrder = docSnap.data().name;
+				console.log('Document data:', docSnap.data());
+			} else {
+				// doc.data() will be undefined in this case
+				console.log('No such document!');
+			}
+		}, 1000);
+	});
 </script>
 
 <div class="flex flex-col w-full h-screen items-center justify-center bg-slate-700">
 	{#if !isUser}
-		<!-- content here -->
-		<button on:click={SignIn}>Sign in with Google</button>
+		<!-- sign in button -->
+		<button
+			class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+			on:click={SignIn}
+		>
+			Sign In
+		</button>
+
+		<!-- button to take to /admin -->
+		<a
+			class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+			href="/admin"><button>Admin Access</button></a
+		>
 	{:else if umail.split('@')[1] == 'its.ac.th'}
 		<h1 class="text-6xl text-slate-100">{umail}</h1>
 		<h1 class="text-6xl text-slate-100">{uname}</h1>
-		<h1 class="text-6xl text-slate-100">{urOrder}</h1>
+		{#if urOrder}
+			<h1 class="text-6xl text-slate-100">{urOrder}</h1>
+		{/if}
 
 		<div
 			class="flex flex-col w-1/4 h-1/4 border-4 border-slate-300 rounded-2xl items-center justify-center my-5"
 		>
 			<input type="text" bind:value={inputData} />
 			<div class="flex">
-				<button class="flex mx-3" on:click={getOrder}>Get Order</button>
 				<button class="flex mx-3" on:click={Submit}>Confirm</button>
 				<button class="flex mx-3">Cancel</button>
 			</div>
