@@ -23,7 +23,6 @@
 			isUser = true;
 			orderRef = doc(db, 'orders', uid);
 			console.log(uid);
-			console.log(orderRef);
 		} else {
 			isUser = false;
 			console.log('user logged out');
@@ -52,7 +51,8 @@
 			orderRef,
 			{
 				sender: uname.split(' ')[0],
-				name: inputData
+				name: inputData,
+				status: 'sent'
 			},
 			{ merge: true }
 		);

@@ -7,7 +7,7 @@
 
 <slot />
 
-<div class="absolute top-0 ">
+<div class="absolute top-0 mx-2 my-2">
 	<Title />
 </div>
 
