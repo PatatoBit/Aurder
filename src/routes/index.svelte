@@ -88,23 +88,50 @@
 			Sign in with your School Gooogle Account
 		</button>
 	{:else if umail.split('@')[1] == 'its.ac.th'}
-		<h1 class="text-6xl text-slate-100">{umail}</h1>
-		<h1 class="text-6xl text-slate-100">{uname}</h1>
-		{#if urOrder}
-			<h1 class="text-6xl text-slate-100">{urOrder}</h1>
-		{/if}
-
-		<div
-			class="flex flex-col w-1/4 h-1/4 border-4 border-slate-300 rounded-2xl items-center justify-center my-5"
+		<!-- display umail and uname -->
+		<h1 class="text-5xl text-slate-200">{uname}</h1>
+		<h1 class="text-xl text-blue-500">{umail}</h1>
+		<button
+			class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+			on:click={SignOut}
 		>
-			<input type="text" bind:value={inputData} />
-			<div class="flex">
-				<button class="flex mx-3" on:click={Submit}>Confirm</button>
-				<button class="flex mx-3">Cancel</button>
-			</div>
+			Sign Out
+		</button>
+
+		<!-- display urorder -->
+		<div
+			class="flex flex-col w-1/3 h-1/3 items-center justify-center m-3 bg-white shadow-md rounded px-8 pt-6 pb-8"
+		>
+			<h1 class="text-5xl text-slate-700">Your Current Order</h1>
+			{#if urOrder}
+				<h1 class="text-5xl text-slate-700">{urOrder}</h1>
+			{:else}
+				<h1 class="text-5xl text-slate-500">Loading order... if it exist</h1>
+			{/if}
 		</div>
 
-		<button on:click={SignOut}>Sign Out</button>
+		<form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" on:submit={Submit}>
+			<div class="mb-4">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+					Order / Change your Order
+				</label>
+				<input
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					id="name"
+					type="text"
+					placeholder="Enter your order"
+					bind:value={inputData}
+				/>
+			</div>
+			<div class="flex items-center justify-between">
+				<button
+					class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+					type="submit"
+				>
+					Submit
+				</button>
+			</div>
+		</form>
 	{:else}
 		<h1 class="text-4xl text-slate-100">Invalid Student Account</h1>
 		<h1 class="text-xl text-slate-100">if you're an admin, click Admin Access</h1>
