@@ -137,7 +137,7 @@
 						<h1 class="text-center text-2xl font-bold text-slate-200">Orders</h1>
 						<p class="text-center text-slate-300 text-xs">
 							{#each orders as order}
-								<div class="flex flex-col ">
+								<div class="flex flex-col bg-slate-700 rounded shadow-md my-1 px-2 py-1">
 									<div class="flex flex-row">
 										<h1 class="flex-1 text-left text-xl">
 											{order.sender.split(' ')[0]}:

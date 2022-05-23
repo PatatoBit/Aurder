@@ -51,7 +51,7 @@
 		await setDoc(
 			orderRef,
 			{
-				sender: uname,
+				sender: uname.split(' ')[0],
 				name: inputData
 			},
 			{ merge: true }
