@@ -12,10 +12,15 @@
 
 	let orders = [];
 
-	onMount(async () => {
-		const unsub = onSnapshot(doc(db, 'cities', 'SF'), (doc) => {
-			orders = [...orders, { sender: doc.data().sender, name: doc.data().name }];
-			console.log(orders);
+	onMount(() => {
+		onSnapshot(orderRef, (querySnapshot) => {
+			// querySnapshot.forEach((doc) => {
+			// 	orders = [...orders, { sender: doc.data().sender, name: doc.data().name }];
+			// });
+			orders = [];
+			for (const doc of querySnapshot.docs) {
+				orders = [...orders, { sender: doc.data().sender, name: doc.data().name }];
+			}
 		});
 	});
 
@@ -24,7 +29,6 @@
 	auth.onAuthStateChanged((user) => {
 		if (user) {
 			umail = user.email;
-
 			isUser = true;
 		} else {
 			isUser = false;

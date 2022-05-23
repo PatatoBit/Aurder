@@ -61,19 +61,8 @@
 
 	onMount(() => {
 		setTimeout(async () => {
-			const unsubscribe = onSnapshot(orderRef, (querySnapshot) => {
-				const cities = [];
-				querySnapshot.forEach((doc) => {
-					if (doc.exists()) {
-						urOrder = doc.data().name;
-						console.log('Document data:', doc.data());
-					} else {
-						// doc.data() will be undefined in this case
-						console.log('No such document!');
-					}
-					console.log('Document data:', doc.data());
-				});
-				console.log('Current cities in CA: ', cities.join(', '));
+			const unsub = onSnapshot(orderRef, (doc) => {
+				urOrder = doc.data().name;
 			});
 		}, 1000);
 	});
@@ -101,8 +90,8 @@
 		</button>
 	{:else if umail.split('@')[1] == 'its.ac.th'}
 		<!-- display umail and uname -->
-		<h1 class="text-5xl text-slate-200">{uname}</h1>
-		<h1 class="text-xl text-blue-500">{umail}</h1>
+		<h1 class="text-sm sm:text-5xl text-slate-200">{uname}</h1>
+		<h1 class="text-sm sm:text-xl text-blue-500">{umail}</h1>
 		<button
 			class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 			on:click={SignOut}
@@ -112,13 +101,13 @@
 
 		<!-- display urorder -->
 		<div
-			class="flex flex-col w-1/3 h-1/3 items-center justify-center m-3 bg-white shadow-md rounded px-8 pt-6 pb-8"
+			class="flex flex-col w-2/3 sm:w-1/3 h-1/3 items-center justify-center m-3 bg-white shadow-md rounded px-8 pt-6 pb-8"
 		>
-			<h1 class="text-5xl text-slate-700">Your Current Order</h1>
+			<h1 class="text-lg sm:text-5xl text-slate-700">Your Current Order</h1>
 			{#if urOrder}
-				<h1 class="text-5xl text-slate-700">{urOrder}</h1>
+				<h1 class="text-sm sm:text-5xl text-slate-700">{urOrder}</h1>
 			{:else}
-				<h1 class="text-5xl text-slate-500">Loading order... if it exist</h1>
+				<h1 class="text-sm sm:text-5xl text-slate-500">Loading order... if it exist</h1>
 			{/if}
 		</div>
 
