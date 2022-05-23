@@ -10,7 +10,7 @@ Ordering system website for school.
 
 ## Todo
 
-- Admin order list
+- ~~Admin order list~~
 - Confirming / Rejecting Orders
   - Order Status
   - Editing cancels confirmed order and marked it "Changed"
