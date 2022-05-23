@@ -78,14 +78,8 @@
 			class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 			on:click={SignIn}
 		>
-			Sign In
+			Sign in with your School Gooogle Account
 		</button>
-
-		<!-- button to take to /admin -->
-		<a
-			class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-			href="/admin"><button>Admin Access</button></a
-		>
 	{:else if umail.split('@')[1] == 'its.ac.th'}
 		<h1 class="text-6xl text-slate-100">{umail}</h1>
 		<h1 class="text-6xl text-slate-100">{uname}</h1>
@@ -105,7 +99,14 @@
 
 		<button on:click={SignOut}>Sign Out</button>
 	{:else}
-		<h1 class="text-6xl text-slate-100">Not a School Account</h1>
-		<button on:click={SignOut}>Sign Out</button>
+		<h1 class="text-4xl text-slate-100">Invalid Student Account</h1>
+		<h1 class="text-xl text-slate-100">if you're an admin, click Admin Access</h1>
+
+		<button
+			class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+			on:click={SignOut}
+		>
+			Sign Out
+		</button>
 	{/if}
 </div>
