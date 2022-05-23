@@ -22,6 +22,8 @@
 			console.log('user logged in');
 			isUser = true;
 			orderRef = doc(db, 'orders', uid);
+			console.log(uid);
+			console.log(orderRef);
 		} else {
 			isUser = false;
 			console.log('user logged out');
@@ -49,6 +51,7 @@
 		await setDoc(
 			orderRef,
 			{
+				sender: uname,
 				name: inputData
 			},
 			{ merge: true }
@@ -73,7 +76,6 @@
 
 <svelte:head>
 	<title>Aurder</title>
-	<description>Food ordering website sytem</description>
 </svelte:head>
 
 <div class="flex flex-col w-full h-screen items-center justify-center bg-slate-700">

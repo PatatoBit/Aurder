@@ -16,7 +16,7 @@
 		const querySnapshot = await getDocs(orderRef);
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			orders = [...orders, doc.data().name];
+			orders = [...orders, { sender: doc.data().sender, name: doc.data().name }];
 		});
 		console.log(orders);
 	});
@@ -53,7 +53,6 @@
 
 <svelte:head>
 	<title>Aurder Admin</title>
-	<description>Food ordering website sytem</description>
 </svelte:head>
 
 <div class="flex flex-col w-full h-screen items-center justify-center bg-slate-700">
@@ -136,10 +135,15 @@
 						<h1 class="text-center text-2xl font-bold text-slate-200">Orders</h1>
 						<p class="text-center text-slate-300 text-xs">
 							{#each orders as order}
-								<div class="flex flex-col items-center">
-									<h1 class="flex text-xl">
-										{order}
-									</h1>
+								<div class="flex flex-col ">
+									<div class="flex flex-row">
+										<h1 class="flex-1 text-left text-xl">
+											{order.sender.split(' ')[0]}:
+										</h1>
+										<h1 class="flex-1 text-right text-xl ">
+											{order.name}
+										</h1>
+									</div>
 								</div>
 							{/each}
 						</p>
