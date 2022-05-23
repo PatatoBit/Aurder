@@ -1,10 +1,25 @@
 <script>
-	import { auth } from '../firebase';
+	import { auth, db } from '../firebase';
 	import { signInWithEmailAndPassword } from 'firebase/auth';
+	import { collection, getDocs } from 'firebase/firestore';
+	import { onMount } from 'svelte';
 
 	let nameInput;
 	let passwordInput;
 	let isUser = false;
+
+	const orderRef = collection(db, 'orders');
+
+	let orders = [];
+
+	onMount(async () => {
+		const querySnapshot = await getDocs(orderRef);
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			orders = [...orders, doc.data().name];
+		});
+		console.log(orders);
+	});
 
 	let umail;
 
@@ -36,8 +51,9 @@
 	}
 </script>
 
-<div class="flex w-full h-screen items-center justify-center bg-slate-700">
+<div class="flex flex-col w-full h-screen items-center justify-center bg-slate-700">
 	{#if !isUser}
+		<!-- Admin Sign in -->
 		<div class="w-full max-w-md">
 			<div class=" shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800">
 				<div class="mb-4">
@@ -88,21 +104,54 @@
 			</div>
 		</div>
 	{:else}
-		<div class="w-full max-w-md">
-			<div class=" shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800">
-				<div class="mb-4">
-					<h1 class="text-center text-2xl font-bold text-slate-200">Welcome Admin</h1>
-					<p class="text-center text-slate-300 text-xs">{umail}</p>
-					<button
-						on:click={() => auth.signOut()}
-						class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-						type="submit"
-					>
-						Sign Out
-					</button>
+		{#if umail.split('@')[1] == 'staff.admin'}
+			<!-- Admin view -->
+			<div class="w-full max-w-md">
+				<div class=" shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800">
+					<div class="mb-4">
+						<h1 class="text-center text-2xl font-bold text-slate-200">Welcome Admin</h1>
+						<p class="text-center text-slate-300 text-xs">{umail}</p>
+						<button
+							on:click={() => auth.signOut()}
+							class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+							type="submit"
+						>
+							Sign Out
+						</button>
+					</div>
 				</div>
 			</div>
-		</div>
+
+			<!-- display each element in Orders -->
+			<div class="w-full max-w-md">
+				<div class=" shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800">
+					<div class="mb-4">
+						<h1 class="text-center text-2xl font-bold text-slate-200">Orders</h1>
+						<p class="text-center text-slate-300 text-xs">
+							{#each orders as order}
+								<div class="flex flex-col items-center">
+									<h1 class="flex text-xl">
+										{order}
+									</h1>
+								</div>
+							{/each}
+						</p>
+					</div>
+				</div>
+			</div>
+		{:else}
+			<!-- Not Admin -->
+			<h1 class="text-4xl text-slate-100">Invalid Admin Account</h1>
+			<h1 class="text-xl text-slate-100">if you're an student, click Main Access</h1>
+
+			<button
+				class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+				on:click={() => auth.signOut()}
+			>
+				Sign Out
+			</button>
+		{/if}
+
 		<!-- welcome admin -->
 	{/if}
 
