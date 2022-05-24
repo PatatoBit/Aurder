@@ -23,6 +23,12 @@
 			isUser = true;
 			orderRef = doc(db, 'orders', uid);
 			console.log(uid);
+
+			setTimeout(async () => {
+				const unsub = onSnapshot(orderRef, (doc) => {
+					urOrder = doc.data().name;
+				});
+			}, 500);
 		} else {
 			isUser = false;
 			console.log('user logged out');
@@ -59,13 +65,11 @@
 		inputData = '';
 	};
 
-	onMount(() => {
-		setTimeout(async () => {
-			const unsub = onSnapshot(orderRef, (doc) => {
-				urOrder = doc.data().name;
-			});
-		}, 1000);
-	});
+	if (isUser) {
+		console.log('...');
+	}
+
+	onMount(async () => {});
 	// if (doc.exists()) {
 	// 	urOrder = doc.data().name;
 	// 	console.log('Document data:', doc.data());
@@ -103,7 +107,7 @@
 		<div
 			class="flex flex-col w-2/3 sm:w-1/3 h-1/3 items-center justify-center m-3 bg-white shadow-md rounded px-8 pt-6 pb-8"
 		>
-			<h1 class="text-lg sm:text-5xl text-slate-700">Your Current Order</h1>
+			<h1 class="text-lg sm:text-5xl text-slate-700 text-center">Your Current Order</h1>
 			{#if urOrder}
 				<h1 class="text-sm sm:text-5xl text-slate-700">{urOrder}</h1>
 			{:else}

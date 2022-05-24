@@ -12,20 +12,7 @@
 
 	let orders = [];
 
-	onMount(() => {
-		onSnapshot(orderRef, (querySnapshot) => {
-			// querySnapshot.forEach((doc) => {
-			// 	orders = [...orders, { sender: doc.data().sender, name: doc.data().name }];
-			// });
-			orders = [];
-			for (const doc of querySnapshot.docs) {
-				orders = [
-					...orders,
-					{ sender: doc.data().sender, name: doc.data().name, status: doc.data().status }
-				];
-			}
-		});
-	});
+	onMount(() => {});
 
 	let umail;
 
@@ -33,6 +20,19 @@
 		if (user) {
 			umail = user.email;
 			isUser = true;
+
+			onSnapshot(orderRef, (querySnapshot) => {
+				// querySnapshot.forEach((doc) => {
+				// 	orders = [...orders, { sender: doc.data().sender, name: doc.data().name }];
+				// });
+				orders = [];
+				for (const doc of querySnapshot.docs) {
+					orders = [
+						...orders,
+						{ sender: doc.data().sender, name: doc.data().name, status: doc.data().status }
+					];
+				}
+			});
 		} else {
 			isUser = false;
 		}
@@ -44,14 +44,13 @@
 			.then((userCredential) => {
 				// Signed in
 				const user = userCredential.user;
-				console.log(user);
 				// ...
 			})
 			.catch((error) => {
 				const errorCode = error.code;
 				const errorMessage = error.message;
 
-				console.log(errorCode, errorMessage);
+				console.error(errorCode, errorMessage);
 			});
 	}
 </script>
@@ -150,10 +149,12 @@
 										</h1>
 									</div>
 									<div class="flex flex-row">
-										<h1 class="flex-1 text-left text-xl">
-											{order.status}
-										</h1>
-										<button class="flex-1 items-right text-xl bg-slate-500 rounded">Ordered</button>
+										<button class="flex-1 items-right text-xl bg-blue-500 rounded mx-1"
+											>Ordered</button
+										>
+										<button class="flex-1 items-right text-xl bg-green-500 rounded mx-1"
+											>Done</button
+										>
 									</div>
 								</div>
 							{/each}
