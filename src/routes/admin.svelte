@@ -1,7 +1,7 @@
 <script>
 	import { auth, db } from '../firebase';
-	import { signInWithEmailAndPassword } from 'firebase/auth';
-	import { collection, onSnapshot, doc } from 'firebase/firestore';
+	import { connectAuthEmulator, signInWithEmailAndPassword } from 'firebase/auth';
+	import { collection, onSnapshot, doc, deleteDoc, setDoc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 
 	let nameInput;
@@ -29,7 +29,12 @@
 				for (const doc of querySnapshot.docs) {
 					orders = [
 						...orders,
-						{ sender: doc.data().sender, name: doc.data().name, status: doc.data().status }
+						{
+							sender: doc.data().sender,
+							uid: doc.data().uid,
+							name: doc.data().name,
+							status: doc.data().status
+						}
 					];
 				}
 			});
@@ -52,6 +57,28 @@
 
 				console.error(errorCode, errorMessage);
 			});
+	}
+
+	async function Cooking(uid) {
+		const orderRef = doc(db, 'orders', uid);
+		await setDoc(
+			orderRef,
+			{
+				status: 'cooking'
+			},
+			{ merge: true }
+		);
+	}
+
+	async function Done(uid) {
+		const orderRef = doc(db, 'orders', uid);
+		await setDoc(
+			orderRef,
+			{
+				status: 'done'
+			},
+			{ merge: true }
+		);
 	}
 </script>
 
@@ -111,72 +138,70 @@
 				</form>
 			</div>
 		</div>
-	{:else}
-		{#if umail.split('@')[1] == 'staff.admin'}
-			<!-- Admin view -->
-			<div class="w-full max-w-md">
-				<div class=" shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800">
-					<div class="mb-4">
-						<h1 class="text-center text-2xl font-bold text-slate-200">Welcome Admin</h1>
-						<p class="text-center text-slate-300 text-xs">{umail}</p>
-						<div class="flex flex-row justify-center">
-							<button
-								on:click={() => auth.signOut()}
-								class="flex text-center mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-								type="submit"
-							>
-								Sign Out
-							</button>
-						</div>
+	{:else if umail.split('@')[1] == 'staff.admin'}
+		<!-- Admin view -->
+		<div class="w-full max-w-md">
+			<div class=" shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800">
+				<div class="mb-4">
+					<h1 class="text-center text-2xl font-bold text-slate-200">Welcome Admin</h1>
+					<p class="text-center text-slate-300 text-xs">{umail}</p>
+					<div class="flex flex-row justify-center">
+						<button
+							on:click={() => auth.signOut()}
+							class="flex text-center mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+							type="submit"
+						>
+							Sign Out
+						</button>
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<!-- display each element in Orders -->
-			<div class="w-full max-w-md">
-				<div class=" shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800">
-					<div class="mb-4">
-						<h1 class="text-center text-2xl font-bold text-slate-200">Orders</h1>
-						<p class="text-center text-slate-300 text-xs">
-							{#each orders as order}
-								<div class="flex flex-col my-1">
-									<div class="flex flex-row bg-slate-700 rounded shadow-md px-2 py-1">
-										<h1 class="flex-1 text-left text-xl">
-											{order.sender}:
-										</h1>
-										<h1 class="flex-1 text-right text-xl ">
-											{order.name}
-										</h1>
-									</div>
-									<div class="flex flex-row">
-										<button class="flex-1 items-right text-xl bg-blue-500 rounded mx-1"
-											>Ordered</button
-										>
-										<button class="flex-1 items-right text-xl bg-green-500 rounded mx-1"
-											>Done</button
-										>
-									</div>
+		<!-- display each element in Orders -->
+		<div class="w-full max-w-md">
+			<div class=" shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800">
+				<div class="mb-4">
+					<h1 class="text-center text-2xl font-bold text-slate-200">Orders</h1>
+					<p class="text-center text-slate-300 text-xs">
+						{#each orders as order}
+							<div class="flex flex-col my-1">
+								<div class="flex flex-row bg-slate-700 rounded shadow-md px-2 py-1">
+									<h1 class="flex-1 text-left text-xl">
+										{order.sender}:
+									</h1>
+									<h1 class="flex-1 text-right text-xl ">
+										{order.name}
+									</h1>
 								</div>
-							{/each}
-						</p>
-					</div>
+								<div class="flex flex-row">
+									<button
+										class="flex-1 items-right text-xl bg-blue-500 rounded mx-1"
+										on:click={() => Cooking(order.uid)}
+									>
+										Ordered</button
+									>
+									<button
+										class="flex-1 items-right text-xl bg-green-500 rounded mx-1"
+										on:click={() => Done(order.uid)}>Done</button
+									>
+								</div>
+							</div>
+						{/each}
+					</p>
 				</div>
 			</div>
-		{:else}
-			<!-- Not Admin -->
-			<h1 class="text-4xl text-slate-100">Invalid Admin Account</h1>
-			<h1 class="text-xl text-slate-100">if you're an student, click Main Access</h1>
+		</div>
+	{:else}
+		<!-- Not Admin -->
+		<h1 class="text-4xl text-slate-100">Invalid Admin Account</h1>
+		<h1 class="text-xl text-slate-100">if you're an student, click Main Access</h1>
 
-			<button
-				class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-				on:click={() => auth.signOut()}
-			>
-				Sign Out
-			</button>
-		{/if}
-
-		<!-- welcome admin -->
+		<button
+			class="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+			on:click={() => auth.signOut()}
+		>
+			Sign Out
+		</button>
 	{/if}
-
-	<!-- Sign In page  -->
 </div>

@@ -20,9 +20,9 @@
 			uname = user.displayName;
 			uid = user.uid;
 			console.log('user logged in');
+			console.log(uid);
 			isUser = true;
 			orderRef = doc(db, 'orders', uid);
-			console.log(uid);
 
 			setTimeout(async () => {
 				const unsub = onSnapshot(orderRef, (doc) => {
@@ -57,6 +57,7 @@
 			orderRef,
 			{
 				sender: uname.split(' ')[0],
+				uid: uid,
 				name: inputData,
 				status: 'sent'
 			},
@@ -64,19 +65,6 @@
 		);
 		inputData = '';
 	};
-
-	if (isUser) {
-		console.log('...');
-	}
-
-	onMount(async () => {});
-	// if (doc.exists()) {
-	// 	urOrder = doc.data().name;
-	// 	console.log('Document data:', doc.data());
-	// } else {
-	// 	// doc.data() will be undefined in this case
-	// 	console.log('No such document!');
-	// }
 </script>
 
 <svelte:head>
