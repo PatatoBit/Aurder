@@ -1,6 +1,6 @@
 <script>
 	import { auth, db } from '../firebase';
-	import { connectAuthEmulator, signInWithEmailAndPassword } from 'firebase/auth';
+	import { signInWithEmailAndPassword } from 'firebase/auth';
 	import { collection, onSnapshot, doc, deleteDoc, setDoc } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 

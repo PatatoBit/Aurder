@@ -103,7 +103,7 @@
 			<h1 class="text-lg sm:text-4xl text-blue-500 text-center">Your Current Order</h1>
 
 			{#if urOrder}
-				<h1 class="text-sm sm:text-5xl text-slate-700">{urOrder}</h1>
+				<h1 class="text-sm sm:text-5xl text-slate-700 text-center">{urOrder}</h1>
 				<Status status={orderStatus} />
 			{:else}
 				<h1 class="text-sm sm:text-5xl text-slate-500">Loading order... if it exist</h1>
