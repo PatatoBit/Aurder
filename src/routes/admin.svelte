@@ -165,8 +165,8 @@
 					<h1 class="text-center text-2xl font-bold text-slate-200">Orders</h1>
 					<p class="text-center text-slate-300 text-xs">
 						{#each orders as order}
-							<div class="flex flex-col my-1">
-								<div class="flex flex-row bg-slate-700 rounded shadow-md px-2 py-1">
+							<div class="flex flex-col my-2">
+								<div class="flex flex-row bg-slate-700 rounded rounded-b-none shadow-md px-2 py-1">
 									<h1 class="flex-1 text-left text-xl">
 										{order.sender}:
 									</h1>
@@ -176,14 +176,14 @@
 								</div>
 								<div class="flex flex-row">
 									<button
-										class="flex-1 items-right text-xl bg-blue-500 rounded mx-1"
+										class="flex-1 items-right text-xl bg-blue-500 rounded rounded-t-none rounded-r-none "
 										on:click={() => Cooking(order.uid)}
 									>
-										Ordered</button
+										📝</button
 									>
 									<button
-										class="flex-1 items-right text-xl bg-green-500 rounded mx-1"
-										on:click={() => Done(order.uid)}>Done</button
+										class="flex-1 items-right text-xl bg-green-500 rounded rounded-t-none rounded-l-none "
+										on:click={() => Done(order.uid)}>✅</button
 									>
 								</div>
 							</div>

@@ -3,6 +3,8 @@
 	import { onMount } from 'svelte';
 	import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 	import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+	import Status from '$lib/components/Status.svelte';
+
 	const provider = new GoogleAuthProvider();
 
 	let isUser;
@@ -13,12 +15,14 @@
 
 	let inputData;
 	let orderRef;
+	let orderStatus;
 
 	auth.onAuthStateChanged((user) => {
 		if (user) {
 			umail = user.email;
 			uname = user.displayName;
 			uid = user.uid;
+
 			console.log('user logged in');
 			console.log(uid);
 			isUser = true;
@@ -27,6 +31,7 @@
 			setTimeout(async () => {
 				const unsub = onSnapshot(orderRef, (doc) => {
 					urOrder = doc.data().name;
+					orderStatus = doc.data().status;
 				});
 			}, 500);
 		} else {
@@ -93,11 +98,13 @@
 
 		<!-- display urorder -->
 		<div
-			class="flex flex-col w-2/3 sm:w-1/3 h-1/3 items-center justify-center m-3 bg-white shadow-md rounded px-8 pt-6 pb-8"
+			class="flex flex-col w-2/3 sm:w-1/3 h-1/3 items-center justify-center m-3 bg-white shadow-md rounded px-8 pt-6 pb-8 relative"
 		>
-			<h1 class="text-lg sm:text-5xl text-slate-700 text-center">Your Current Order</h1>
+			<h1 class="text-lg sm:text-4xl text-blue-500 text-center">Your Current Order</h1>
+
 			{#if urOrder}
 				<h1 class="text-sm sm:text-5xl text-slate-700">{urOrder}</h1>
+				<Status status={orderStatus} />
 			{:else}
 				<h1 class="text-sm sm:text-5xl text-slate-500">Loading order... if it exist</h1>
 			{/if}
