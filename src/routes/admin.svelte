@@ -7,6 +7,7 @@
 	let nameInput;
 	let passwordInput;
 	let isUser = false;
+	let status;
 
 	const orderRef = collection(db, 'orders');
 
@@ -33,7 +34,8 @@
 							sender: doc.data().sender,
 							uid: doc.data().uid,
 							name: doc.data().name,
-							status: doc.data().status
+							status: doc.data().status,
+							change: doc.data().change
 						}
 					];
 				}
@@ -80,6 +82,17 @@
 			{ merge: true }
 		);
 	}
+
+	// async function Change(){
+	// 	const orderRef = doc(db, 'orders', uid);
+	// 	await setDoc(
+	// 		orderRef,
+	// 	)
+	// }
+	// async function NoChange(){
+	// 	const orderRef = doc(db, 'orders', uid);
+
+	// }
 </script>
 
 <svelte:head>
@@ -165,8 +178,43 @@
 					<h1 class="text-center text-2xl font-bold text-slate-200">Orders</h1>
 					<p class="text-center text-slate-300 text-xs">
 						{#each orders as order}
-							<div class="flex flex-col my-2">
-								<div class="flex flex-row bg-slate-700 rounded rounded-b-none shadow-md px-2 py-1">
+							<div class="flex flex-col my-2 ">
+								<div class="flex flex-row">
+									<div class="flex-1 flex-row text-left">
+										{#if !order.change}
+											<!-- content here -->
+											<h1
+												class="flex-1 text-base  bg-slate-700 w-20 rounded rounded-b-none border-b border-slate-500"
+											>
+												{order.status}
+											</h1>
+										{:else}
+											<!-- else content here -->
+											<div class="flex-row tex-right">
+												<h1
+													class="text-base bg-slate-700 rounded rounded-b-none border-b border-slate-500 px-3"
+												>
+													{order.status + ' : ' + order.change}
+												</h1>
+											</div>
+										{/if}
+									</div>
+									{#if order.status == 'changed'}
+										<div class="flex-1 text-right">
+											<button
+												class="text-base bg-slate-700 w-20 rounded rounded-b-none border-b border-purple-500"
+												>Confirm</button
+											>
+											<button
+												class="text-base bg-slate-700 w-20 rounded rounded-b-none border-b border-purple-500"
+												>Reject</button
+											>
+										</div>
+									{/if}
+								</div>
+								<div
+									class="flex flex-row bg-slate-700 rounded rounded-b-none rounded-tl-none shadow-md px-2 py-1"
+								>
 									<h1 class="flex-1 text-left text-xl">
 										{order.sender}:
 									</h1>

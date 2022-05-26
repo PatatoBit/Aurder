@@ -12,6 +12,7 @@
 	let uname = '';
 	let uid = '';
 	let urOrder;
+	let change;
 
 	let inputData;
 	let orderRef;
@@ -28,12 +29,13 @@
 			isUser = true;
 			orderRef = doc(db, 'orders', uid);
 
-			setTimeout(async () => {
-				const unsub = onSnapshot(orderRef, (doc) => {
-					urOrder = doc.data().name;
-					orderStatus = doc.data().status;
-				});
-			}, 500);
+			const unsub = onSnapshot(orderRef, (doc) => {
+				urOrder = doc.data().name;
+				if (doc.data().change != undefined) {
+					change = doc.data().change;
+				}
+				orderStatus = doc.data().status;
+			});
 		} else {
 			isUser = false;
 			console.log('user logged out');
@@ -58,17 +60,31 @@
 		e.preventDefault();
 		console.log(inputData, uid);
 
-		await setDoc(
-			orderRef,
-			{
-				sender: uname.split(' ')[0],
-				uid: uid,
-				name: inputData,
-				status: 'sent'
-			},
-			{ merge: true }
-		);
-		inputData = '';
+		if (orderStatus != 'done') {
+			await setDoc(
+				orderRef,
+				{
+					sender: uname.split(' ')[0],
+					uid: uid,
+					change: inputData,
+					status: 'changed'
+				},
+				{ merge: true }
+			);
+			inputData = '';
+		} else {
+			await setDoc(
+				orderRef,
+				{
+					sender: uname.split(' ')[0],
+					uid: uid,
+					name: inputData,
+					status: 'sent'
+				},
+				{ merge: true }
+			);
+			inputData = '';
+		}
 	};
 </script>
 
@@ -100,19 +116,25 @@
 		<div
 			class="flex flex-col w-2/3 sm:w-1/3 h-1/3 items-center justify-center m-3 bg-white shadow-md rounded px-8 pt-6 pb-8 relative"
 		>
-			<h1 class="text-lg sm:text-4xl text-blue-500 text-center">Your Current Order</h1>
+			<h1 class="text-lg sm:text-4xl text-blue-500 text-center">Current Order</h1>
 
 			{#if urOrder}
 				<h1 class="text-sm sm:text-5xl text-slate-700 text-center">{urOrder}</h1>
+				{#if change}
+					<div class="mt-3">
+						<h1 class="text-lg sm:text-4xl text-purple-500 text-center">Changed Order</h1>
+						<h1 class="text-sm sm:text-5xl text-slate-700 text-center">{change}</h1>
+					</div>
+				{/if}
 				<Status status={orderStatus} />
 			{:else}
-				<h1 class="text-sm sm:text-5xl text-slate-500">Loading order... if it exist</h1>
+				<h1 class="text-sm sm:text-5xl text-slate-500">No Order?</h1>
 			{/if}
 		</div>
 
 		<form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" on:submit={Submit}>
 			<div class="mb-4">
-				<label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+				<label class="block text-gray-700 text-sm font-bold mb-2 text-center" for="name">
 					Order / Change your Order
 				</label>
 				<input
@@ -121,9 +143,10 @@
 					type="text"
 					placeholder="Enter your order"
 					bind:value={inputData}
+					required
 				/>
 			</div>
-			<div class="flex items-center justify-between">
+			<div class="flex items-center justify-center">
 				<button
 					class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 					type="submit"
