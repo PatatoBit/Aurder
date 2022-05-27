@@ -1,7 +1,7 @@
 <script>
 	import { auth, db } from '../firebase';
 	import { signInWithEmailAndPassword } from 'firebase/auth';
-	import { collection, onSnapshot, doc, deleteDoc, setDoc } from 'firebase/firestore';
+	import { collection, onSnapshot, doc, deleteDoc, setDoc, deleteField } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 
 	let nameInput;
@@ -83,16 +83,30 @@
 		);
 	}
 
-	// async function Change(){
-	// 	const orderRef = doc(db, 'orders', uid);
-	// 	await setDoc(
-	// 		orderRef,
-	// 	)
-	// }
-	// async function NoChange(){
-	// 	const orderRef = doc(db, 'orders', uid);
+	async function ConfirmChange(order) {
+		const orderRef = doc(db, 'orders', order.uid);
+		await setDoc(
+			orderRef,
+			{
+				status: 'changed:ok',
+				name: order.name,
+				change: deleteField()
+			},
+			{ merge: true }
+		);
+	}
 
-	// }
+	async function RejectChange(uid) {
+		const orderRef = doc(db, 'orders', uid);
+		await setDoc(
+			orderRef,
+			{
+				status: 'changed:no',
+				change: deleteField()
+			},
+			{ merge: true }
+		);
+	}
 </script>
 
 <svelte:head>
@@ -203,11 +217,11 @@
 										<div class="flex-1 text-right">
 											<button
 												class="text-base bg-slate-700 w-20 rounded rounded-b-none border-b border-purple-500"
-												>Confirm</button
+												on:click={() => ConfirmChange(order)}>Confirm</button
 											>
 											<button
 												class="text-base bg-slate-700 w-20 rounded rounded-b-none border-b border-purple-500"
-												>Reject</button
+												on:click={() => RejectChange(order)}>Reject</button
 											>
 										</div>
 									{/if}

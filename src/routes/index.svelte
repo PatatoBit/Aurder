@@ -60,7 +60,7 @@
 		e.preventDefault();
 		console.log(inputData, uid);
 
-		if (orderStatus != 'done') {
+		if (orderStatus != 'done' && urOrder) {
 			await setDoc(
 				orderRef,
 				{
@@ -122,8 +122,8 @@
 				<h1 class="text-sm sm:text-5xl text-slate-700 text-center">{urOrder}</h1>
 				{#if change}
 					<div class="mt-3">
-						<h1 class="text-lg sm:text-4xl text-purple-500 text-center">Changed Order</h1>
-						<h1 class="text-sm sm:text-5xl text-slate-700 text-center">{change}</h1>
+						<h1 class="text-lg sm:text-3xl text-purple-500 text-center">Changed Order</h1>
+						<h1 class="text-sm sm:text-4xl text-slate-700 text-center">{change}</h1>
 					</div>
 				{/if}
 				<Status status={orderStatus} />
