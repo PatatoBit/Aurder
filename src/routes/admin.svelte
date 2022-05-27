@@ -84,12 +84,13 @@
 	}
 
 	async function ConfirmChange(order) {
+		console.log(order);
 		const orderRef = doc(db, 'orders', order.uid);
 		await setDoc(
 			orderRef,
 			{
-				status: 'changed:ok',
-				name: order.name,
+				status: 'cooking',
+				name: order.change,
 				change: deleteField()
 			},
 			{ merge: true }
@@ -101,7 +102,7 @@
 		await setDoc(
 			orderRef,
 			{
-				status: 'changed:no',
+				status: 'cooking',
 				change: deleteField()
 			},
 			{ merge: true }
